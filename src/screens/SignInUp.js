@@ -7,11 +7,11 @@ import {
 import { auth, db, storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
-import { useNavigate, Link } from "react-router";
+import { useNavigate } from "react-router";
 
 const SignInUp = () => {
   const [isSignIn, setIsSignIn] = useState(true);
-  const [err, setErr] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -20,13 +20,12 @@ const SignInUp = () => {
     e.preventDefault();
     const email = e.target[0].value;
     const password = e.target[2].value;
-    console.log(email + password);
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/");
     } catch (err) {
       alert(err.message);
-      setErr(true);
     }
   };
   /////////////////////////////////////////////
@@ -69,13 +68,12 @@ const SignInUp = () => {
           } catch (err) {
             console.log(err);
             alert(err.message);
-            setErr(true);
+
             setLoading(false);
           }
         });
       });
     } catch (err) {
-      setErr(true);
       alert(err.message);
       setLoading(false);
     }
