@@ -105,15 +105,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-{
-  /* <div className="flex horizontal-scroll">
-{navbaritems.map((item, index) => (
-  <div
-    key={index}
-    className="min-w-[200px] bg-gray-200 m-2 p-4 rounded-md"
-  >
-    {item}
-  </div>
-))}
-</div> */
-}
