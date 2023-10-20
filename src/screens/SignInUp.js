@@ -8,9 +8,12 @@ import { auth, db, storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router";
+import { Link, useSearchParams } from "react-router-dom";
 
 const SignInUp = () => {
-  const [isSignIn, setIsSignIn] = useState(true);
+  const [searchParams] = useSearchParams();
+
+  const mode = searchParams.get("mode") === "login";
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -62,8 +65,6 @@ const SignInUp = () => {
               photoURL: downloadURL,
             });
 
-            //create empty user chats on firestore
-            // await setDoc(doc(db, "userChats", res.user.uid), {});
             navigate("/");
           } catch (err) {
             console.log(err);
@@ -78,32 +79,21 @@ const SignInUp = () => {
       setLoading(false);
     }
   };
-  ////////////////
 
-  const toggleForm = () => {
-    setIsSignIn(!isSignIn);
-  };
-  /////////////////
   return (
     <div className="bg-[#02030C] flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
-          <span>{isSignIn ? "Sign In" : "Sign Up"}</span> to your account
+          <span>{mode ? "Sign In" : "Sign Up"}</span> to your account
         </h2>
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form
           className="space-y-6"
-          onSubmit={isSignIn ? handleSignIn : handleSignUp}
+          onSubmit={mode ? handleSignIn : handleSignUp}
         >
-          {/* <div className="flex justify-evenly">
-            <div className="h-10 w-10 bg-slate-100 m-2"></div>
-            <div className="h-10 w-10 bg-slate-100 m-2"></div>
-            <div className="h-10 w-10 bg-slate-100 m-2"></div>
-            <div className="h-10 w-10 bg-slate-100 m-2"></div>
-          </div> */}
-          {isSignIn ? (
+          {mode ? (
             <></>
           ) : (
             <div>
@@ -155,7 +145,7 @@ const SignInUp = () => {
                 Password
               </label>
               <div className="text-[#F5F5F5] hidden text-opacity-85% md:text-md text-md ">
-                {isSignIn ? (
+                {mode ? (
                   <button className="font-semibold text-[#02030C]">
                     Forgot password?
                   </button>
@@ -175,7 +165,7 @@ const SignInUp = () => {
                 border-[#636363] max-h-32 h-10 md:h-14"
               ></input>
             </div>
-            {isSignIn ? (
+            {mode ? (
               <></>
             ) : (
               <div>
@@ -209,21 +199,19 @@ const SignInUp = () => {
               type="submit"
               className="flex w-full justify-center rounded-md bg-[#26D1D4] px-3 py-1.5 text-sm font-semibold leading-6 text-black shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 "
             >
-              {isSignIn ? "Sign In" : "Sign Up"}
+              {mode ? "Sign In" : "Sign Up"}
             </button>
           </div>
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">
-          {isSignIn ? "Not a member?" : "Already a member?"} {}
-          <button
-            onClick={() => {
-              toggleForm();
-            }}
+          {mode ? "Not a member?" : "Already a member?"} {}
+          <Link
             className="font-semibold leading-6 text-[#26D1D4] pl-2"
+            to={`?mode=${mode ? "signup" : "login"}`}
           >
-            {isSignIn ? "Sign Up" : "Sign In"}
-          </button>
+            {mode ? "Sign Up" : "Sign In"}{" "}
+          </Link>
         </p>
       </div>
     </div>

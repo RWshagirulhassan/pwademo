@@ -3,9 +3,10 @@ import logo from "../assets/logo.png";
 import { FaSearch, FaBell } from "react-icons/fa";
 import { RiAccountCircleLine } from "react-icons/ri";
 import { getAuth, signOut } from "firebase/auth";
+import { NavLink } from "react-router-dom";
+
 const Navbar = () => {
   const [input, setInput] = useState("");
-
   const handleChange = (event) => {
     const value = event.target.value;
 
@@ -13,17 +14,13 @@ const Navbar = () => {
   };
   const navbaritems = [
     "Home",
-    "DashBoard",
+    "Dashboard",
     "PILAR",
     "IBAR",
     "Games",
     "Community",
   ];
-  const [currentNavBar, setcurrentNavBar] = useState("Home");
 
-  const handleNavBar = (value) => {
-    setcurrentNavBar(value);
-  };
   const handleSignOut = () => {
     const auth = getAuth();
     signOut(auth)
@@ -40,21 +37,22 @@ const Navbar = () => {
         <div className="flex ">
           <img alt="logo" className="w-[34px]  md:w-[54px] " src={logo}></img>
 
-          <ul className="hidden md:flex items-end text-sm gap-[10%]  md:ml-10">
+          <nav className="hidden md:flex items-end text-sm gap-[10%]  md:ml-10">
             {navbaritems.map((title, index) => (
-              <text
-                onClick={() => handleNavBar(title)}
+              <NavLink
+                end
+                to={title === "Home" ? "/" : title}
                 key={index}
-                className={`${
-                  title === currentNavBar
-                    ? " border-[#42E6E9] text-[#42E6E9]"
-                    : " border-transparent"
-                } p-1 border-b-2  active:`}
+                className={({ isActive }) =>
+                  isActive
+                    ? "border-[#42E6E9] text-[#42E6E9] p-1 border-b-2 text-sm  snap-center"
+                    : "border-transparent text-white p-1 border-b-2 text-sm  snap-center"
+                }
               >
                 {title}
-              </text>
+              </NavLink>
             ))}
-          </ul>
+          </nav>
         </div>
 
         <div className="flex gap-[25px] md:gap-[35px] items-center">
@@ -81,25 +79,22 @@ const Navbar = () => {
           />
         </div>
       </div>
-
-      <div
-        className="flex  md:hidden snap-x overflow-auto  max-w-screen px-3   gap-[9%]  scrollbar-width-thin scrollbar-thumb-rounded-full scrollbar-thumb-gray-300 scrollbar-track-gray-100"
-        style={{ scrollbarWidth: "none" }}
-      >
+      <nav className="flex md:hidden max-w-screen px-3 gap-[9%] overflow-auto">
         {navbaritems.map((title, index) => (
-          <div
-            onClick={() => handleNavBar(title)}
+          <NavLink
+            end
+            to={title === "Home" ? "/" : title}
             key={index}
-            className={`${
-              title === currentNavBar
-                ? " border-[#42E6E9] text-[#42E6E9]"
-                : " border-transparent text-white"
-            } p-1 border-b-2 text-sm  snap-center`}
+            className={({ isActive }) =>
+              isActive
+                ? "border-[#42E6E9] text-[#42E6E9] p-1 border-b-2 text-sm  snap-center"
+                : "border-transparent text-white p-1 border-b-2 text-sm  snap-center"
+            }
           >
             {title}
-          </div>
+          </NavLink>
         ))}
-      </div>
+      </nav>
     </div>
   );
 };
